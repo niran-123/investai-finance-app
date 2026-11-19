@@ -1,0 +1,16 @@
+{
+  "name": "investai-platform",
+  "version": "1.0.0",
+  "description": "InvestAI - Personalized AI-Assisted Financial & Investment Advisory Platform",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "start:backend": "npm --prefix backend start",
+    "build:frontend": "npm --prefix frontend run build",
+    "lint:frontend": "npm --prefix frontend run lint"
+  },
+  "dependencies": {
+    "lucide-react": "^1.35.0",
+    "react-router-dom": "^7.18.3"
+  }
+}

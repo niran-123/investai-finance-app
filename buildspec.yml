@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo "=== Phase: Installing dependencies ==="
+      - cd frontend && npm ci && cd ..
+      - cd backend && npm ci --production=false && cd ..
+  pre_build:
+    commands:
+      - echo "=== Phase: Linting frontend code ==="
+      - cd frontend && npm run lint && cd ..
+  build:
+    commands:
+      - echo "=== Phase: Building production frontend ==="
+      - cd frontend && npm run build && cd ..
+      - echo "=== Moving frontend build into backend static public folder ==="
+      - mkdir -p backend/public
+      - cp -r frontend/dist/* backend/public/
+  post_build:
+    commands:
+      - echo "=== Build, lint, and packaging completed successfully ==="
+
+artifacts:
+  base-directory: backend
+  files:
+    - '**/*'
