@@ -70,9 +70,11 @@ app.use("/api/market/ml-prediction", mlRoutes);
 // Serve static frontend files if built into public directory
 if (fs.existsSync(publicPath) && fs.existsSync(path.join(publicPath, "index.html"))) {
   app.use(express.static(publicPath));
-  app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api")) return next();
-    res.sendFile(path.join(publicPath, "index.html"));
+  app.use((req, res, next) => {
+    if (req.method === "GET" && !req.path.startsWith("/api")) {
+      return res.sendFile(path.join(publicPath, "index.html"));
+    }
+    next();
   });
 } else {
   app.get("/", (req, res) => {
