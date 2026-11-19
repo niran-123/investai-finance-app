@@ -1,19 +1,28 @@
 import pg from "pg";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 dotenv.config();
 
 const { Pool } = pg;
 
 const isProduction = process.env.NODE_ENV === "production";
+const isCloudDb =
+  process.env.DATABASE_URL &&
+  (process.env.DATABASE_URL.includes("rds.amazonaws.com") ||
+    process.env.DATABASE_URL.includes("sslmode=require") ||
+    process.env.DATABASE_URL.includes("neon.tech") ||
+    process.env.DATABASE_URL.includes("supabase"));
 
 const poolConfig = process.env.DATABASE_URL
   ? {
       connectionString: process.env.DATABASE_URL,
-      ssl:
-        isProduction || (process.env.DATABASE_URL && process.env.DATABASE_URL.includes("sslmode=require"))
-          ? { rejectUnauthorized: false }
-          : undefined,
+      ssl: isProduction || isCloudDb ? { rejectUnauthorized: false } : undefined,
     }
   : {
       host: process.env.DB_HOST || "localhost",
